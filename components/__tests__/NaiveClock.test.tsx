@@ -55,7 +55,8 @@ describe('NaiveClock Component', () => {
   });
 
   it('clears interval on unmount (Prevent Memory Leak)', () => {
-    const spyClearInterval = vi.spyOn(global, 'clearInterval');
+    // Spy on window.clearInterval since we are in JSDOM environment
+    const spyClearInterval = vi.spyOn(window, 'clearInterval');
     const { unmount } = render(<NaiveClock ref={ref} />);
     
     act(() => { ref.current?.start(); });

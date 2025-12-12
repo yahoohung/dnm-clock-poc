@@ -22,9 +22,9 @@ class MockHookWorker {
 describe('useBroadcastMatchTimer Hook', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    global.Worker = MockHookWorker as any;
-    global.URL.createObjectURL = vi.fn();
-    global.URL.revokeObjectURL = vi.fn();
+    (window as any).Worker = MockHookWorker;
+    window.URL.createObjectURL = vi.fn();
+    window.URL.revokeObjectURL = vi.fn();
     workerOnMessageCallback = null;
     vi.spyOn(console, 'error').mockImplementation(() => {}); // Suppress error logs for negative test
   });
@@ -66,14 +66,14 @@ describe('useBroadcastMatchTimer Hook', () => {
     const { unmount } = renderHook(() => useBroadcastMatchTimer(0));
     unmount();
     expect(mockTerminate).toHaveBeenCalled();
-    expect(global.URL.revokeObjectURL).toHaveBeenCalled();
+    expect(window.URL.revokeObjectURL).toHaveBeenCalled();
   });
 
   it('gracefully handles Worker initialization failure', () => {
     // Force Worker to throw during construction
-    global.Worker = class BadWorker {
+    (window as any).Worker = class BadWorker {
       constructor() { throw new Error('Security Error'); }
-    } as any;
+    };
 
     const { result } = renderHook(() => useBroadcastMatchTimer(0));
     

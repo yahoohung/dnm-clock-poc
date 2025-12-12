@@ -39,10 +39,9 @@ describe('Stress Tools Components', () => {
     // The actual "blocking" is a browser behavior we can't fully unit test in JSDOM easily without hanging the process.
     // We'll advance timers past the loop completion assuming the loop finishes instantly in mock time.
     
-    // To allow the loop to break, we mock performance.now
-    const originalNow = performance.now;
+    // To allow the loop to break, we mock performance.now using vi.spyOn on the window object
     let nowCallCount = 0;
-    global.performance.now = vi.fn().mockImplementation(() => {
+    const nowSpy = vi.spyOn(window.performance, 'now').mockImplementation(() => {
         nowCallCount++;
         // Return start time first, then start + duration + 1 to break loop immediately
         return nowCallCount > 1 ? 99999999 : 0; 
@@ -52,7 +51,7 @@ describe('Stress Tools Components', () => {
         vi.advanceTimersByTime(100); // Trigger the setTimeout callback
     });
 
-    global.performance.now = originalNow;
+    nowSpy.mockRestore();
     
     // Should return to idle
     expect(screen.queryByText('THREAD BLOCKED')).not.toBeInTheDocument();

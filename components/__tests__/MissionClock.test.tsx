@@ -22,15 +22,15 @@ describe('MissionClock Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resizeCallback = null;
-    global.Worker = MockWorker as any;
-    global.ResizeObserver = class ResizeObserver {
+    (window as any).Worker = MockWorker;
+    window.ResizeObserver = class ResizeObserver {
       constructor(cb: ResizeObserverCallback) {
         resizeCallback = cb;
       }
       observe() {}
       unobserve() {}
       disconnect() {}
-    };
+    } as any;
   });
 
   afterEach(() => {
@@ -39,7 +39,7 @@ describe('MissionClock Component', () => {
 
   it('instantiates a Worker and transfers control of OffscreenCanvas on mount', () => {
     const { unmount } = render(<MissionClock />);
-    expect(global.URL.createObjectURL).toHaveBeenCalled();
+    expect(window.URL.createObjectURL).toHaveBeenCalled();
     expect(mockWorkerPostMessage).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'INIT' }),
       expect.anything()

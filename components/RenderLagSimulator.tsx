@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // A single "heavy" cell.
 // intentionally not memoized to force re-render every parent tick.
-const HeavyCell = ({ index, tick }: { index: number; tick: number }) => {
+const HeavyCell: React.FC<{ index: number; tick: number }> = ({ index, tick }) => {
   // Artificial heavy calculation per cell to burn CPU cycles during render
   const expensiveMath = Math.sin(index * tick) * Math.cos(index);
   
