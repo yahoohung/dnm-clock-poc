@@ -12,7 +12,10 @@
     "vite": "^7.2.7",
     "react-dom": "^19.2.3",
     "react": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2"
+    "@vitejs/plugin-react": "^5.1.2",
+    "vitest": "^4.0.15",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

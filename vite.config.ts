@@ -7,4 +7,11 @@ export default defineConfig({
   server: {
     host: true, // Expose to network/container
   },
+  // @ts-ignore - Vitest types are detected automatically in test runner
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './test/setup.ts',
+    css: false,
+  },
 });
