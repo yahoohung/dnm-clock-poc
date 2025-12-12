@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // A single "heavy" cell.
-// intentionally not memoized to force re-render every parent tick.
+// intentionally not memoised to force re-render every parent tick.
 const HeavyCell: React.FC<{ index: number; tick: number }> = ({ index, tick }) => {
   // Artificial heavy calculation per cell to burn CPU cycles during render
   const expensiveMath = Math.sin(index * tick) * Math.cos(index);
@@ -71,7 +71,7 @@ export const RenderLagSimulator = () => {
       </div>
       
       <p className="text-xs text-slate-400">
-        Spawns thousands of un-memoized components that re-render every frame. 
+        Spawns thousands of un-memoised components that re-render every frame. 
         Tests if the Timer stays accurate even when React is struggling to paint.
       </p>
 

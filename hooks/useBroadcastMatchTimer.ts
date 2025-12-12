@@ -80,7 +80,7 @@ export const useBroadcastMatchTimer = (initialSeconds: number = 0): TimerState &
     const newState = calculateState();
     const oldState = store.current.snapshot;
 
-    // Optimization: Only notify React if the "visible second" or "running state" changed.
+    // Optimisation: Only notify React if the "visible second" or "running state" changed.
     // This filters out the 50ms worker ticks that occur within the same second.
     if (newState.totalSeconds !== oldState.totalSeconds || newState.isRunning !== oldState.isRunning) {
       store.current.snapshot = newState;

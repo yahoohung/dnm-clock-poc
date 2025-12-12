@@ -13,7 +13,7 @@ let canvas = null;
 let ctx = null;
 let animationFrameId = null;
 
-// [OPTIMIZATION] Pre-allocate strings (00-59).
+// [OPTIMISATION] Pre-allocate strings (00-59).
 // Eliminates string allocation during the render loop.
 const DIGITS = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
 
@@ -55,7 +55,7 @@ function paint(displaySeconds) {
   ctx.textBaseline = 'middle';
   
   // 4. Time String Composition (Zero GC)
-  // [OPTIMIZATION] Use lookup table instead of real-time formatting
+  // [OPTIMISATION] Use lookup table instead of real-time formatting
   // Handle negative time gracefully (optional, but good for robustness)
   const absSeconds = Math.abs(displaySeconds);
   const h = DIGITS[Math.floor(absSeconds / 3600) % 60]; 
@@ -99,7 +99,7 @@ function loop() {
   const totalMs = state.baseTimeMs + elapsedMs;
   const currentSecond = Math.floor(totalMs / 1000);
 
-  // [OPTIMIZATION] Dirty Check: Only paint if the second has changed
+  // [OPTIMISATION] Dirty Check: Only paint if the second has changed
   if (currentSecond !== state.lastRenderedSecond) {
     state.lastRenderedSecond = currentSecond;
     paint(currentSecond);

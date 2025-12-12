@@ -29,15 +29,15 @@ This Proof of Concept implements a **Dual-Thread Architecture**:
 ## 🏗 System Architecture
 
 ### 1. Zero-Allocation Render Loop (`clock.worker.ts`)
-The worker utilizes a highly optimized render loop designed to generate zero garbage collection (GC) pauses during runtime.
+The worker utilises a highly optimised render loop designed to generate zero garbage collection (GC) pauses during runtime.
 *   **Pre-allocated strings:** '00' through '59' are pre-computed.
 *   **Strict Type Checks:** No dynamic object creation inside the `requestAnimationFrame` loop.
-*   **Desynchronized Context:** Hints the browser to bypass the compositor for lowest possible latency.
+*   **Desynchronised Context:** Hints the browser to bypass the compositor for lowest possible latency.
 
 ### 2. The Stress Lab
 The application includes a suite of tools designed to break standard React timers:
 *   **CPU Stress Test:** Runs a synchronous `while()` loop on the main thread, simulating heavy data parsing or crypto operations.
-*   **Render Lag Simulator:** Spawns 1,500+ un-memoized nodes that re-render every frame to choke the browser's layout engine.
+*   **Render Lag Simulator:** Spawns 1,500+ un-memoised nodes that re-render every frame to choke the browser's layout engine.
 *   **Chaos Monkey:** Randomly spams Start/Stop/Set commands to verify message queue integrity and race-condition handling.
 
 ---
@@ -91,5 +91,5 @@ src/
 *   **Atomic Adjustments:** Adding time (e.g., +1 second) adjusts the `BaseTime` and resets the `StartTime` anchor instantly, preserving sub-millisecond precision.
 *   **React 19 Compatibility:** Uses `useSyncExternalStore` patterns and imperative Ref management to handle the non-React Worker lifecycle safely.
 
-## 📄 License
+## 📄 Licence
 MIT
