@@ -1,4 +1,4 @@
-# NASA-Grade Broadcast Match Timer PoC
+# High-Precision Broadcast Match Timer PoC
 
 > **A high-precision, drift-free broadcast timer engine designed to maintain atomic accuracy under extreme main-thread rendering loads.**
 

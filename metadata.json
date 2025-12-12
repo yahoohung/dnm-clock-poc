@@ -1,5 +1,5 @@
 {
   "name": "DNM Clock PoC",
-  "description": "A NASA-grade, drift-free broadcast match timer playground designed to stress test time synchronisation under heavy main-thread load and extreme edge cases.",
+  "description": "A broadcast-grade, drift-free match timer playground designed to stress test time synchronisation under heavy main-thread load and extreme edge cases.",
   "requestFramePermissions": []
 }
