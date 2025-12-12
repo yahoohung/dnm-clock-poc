@@ -105,7 +105,11 @@ export const MissionClock = ({
       controllerRef.current = {
         start: () => worker.postMessage({ type: 'START' }),
         pause: () => worker.postMessage({ type: 'PAUSE' }),
-        setTime: (s: number) => worker.postMessage({ type: 'SET_TIME', payload: { seconds: s } })
+        setTime: (s: number) => worker.postMessage({ type: 'SET_TIME', payload: { seconds: s } }),
+        adjustTime: (delta: number) => worker.postMessage({ 
+          type: 'ADJUST_TIME', 
+          payload: { deltaSeconds: delta } 
+        })
       };
     }
 

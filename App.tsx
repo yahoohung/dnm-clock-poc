@@ -29,8 +29,10 @@ function App() {
     setTime: (s: number) => {
       clockControllerRef.current?.setTime(s);
       naiveClockRef.current?.setTime(s);
-      // Usually setting time doesn't stop it if it's running, 
-      // but let's assume for safety we don't change running state automatically
+    },
+    adjustTime: (delta: number) => {
+      clockControllerRef.current?.adjustTime(delta);
+      naiveClockRef.current?.adjustTime(delta);
     }
   };
   
@@ -115,8 +117,8 @@ function App() {
 
           {/* Standard Controls */}
           <div className="bg-slate-900 rounded-xl p-6 border border-slate-800">
-            <h2 className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-4">Sync Control (Controls Both)</h2>
             
+            {/* Top Row: Play/Pause/Reset */}
             <div className="grid grid-cols-2 gap-4 mb-6">
               <button
                 onClick={isRunning ? actions.pause : actions.start}
@@ -148,6 +150,30 @@ function App() {
               </button>
             </div>
 
+            {/* Middle Row: Fine Adjustments (H/M/S) */}
+            <div className="mb-6 space-y-2">
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Atomic Adjustment (Hot)</h3>
+                <div className="grid grid-cols-3 gap-2">
+                    {/* Hours */}
+                    <div className="flex gap-1">
+                        <button onClick={() => actions.adjustTime(-3600)} className="flex-1 py-2 bg-slate-800 text-slate-300 rounded hover:bg-slate-700 active:bg-slate-600 text-xs font-mono font-bold border border-slate-700">-1H</button>
+                        <button onClick={() => actions.adjustTime(3600)} className="flex-1 py-2 bg-slate-800 text-slate-300 rounded hover:bg-slate-700 active:bg-slate-600 text-xs font-mono font-bold border border-slate-700">+1H</button>
+                    </div>
+                    {/* Minutes */}
+                    <div className="flex gap-1">
+                        <button onClick={() => actions.adjustTime(-60)} className="flex-1 py-2 bg-slate-800 text-slate-300 rounded hover:bg-slate-700 active:bg-slate-600 text-xs font-mono font-bold border border-slate-700">-1M</button>
+                        <button onClick={() => actions.adjustTime(60)} className="flex-1 py-2 bg-slate-800 text-slate-300 rounded hover:bg-slate-700 active:bg-slate-600 text-xs font-mono font-bold border border-slate-700">+1M</button>
+                    </div>
+                    {/* Seconds */}
+                    <div className="flex gap-1">
+                        <button onClick={() => actions.adjustTime(-1)} className="flex-1 py-2 bg-slate-800 text-slate-300 rounded hover:bg-slate-700 active:bg-slate-600 text-xs font-mono font-bold border border-slate-700">-1S</button>
+                        <button onClick={() => actions.adjustTime(1)} className="flex-1 py-2 bg-slate-800 text-slate-300 rounded hover:bg-slate-700 active:bg-slate-600 text-xs font-mono font-bold border border-slate-700">+1S</button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Row: Presets */}
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Sports Presets</h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {presets.map((preset) => (
                 <button
@@ -193,7 +219,7 @@ function App() {
                     <strong className="text-blue-300">Immunity to Lag:</strong> Enable "Start Lag" at max intensity. The <span className="text-red-400">Main Thread Clock</span> will stutter or update unevenly (FPS drops). The <span className="text-green-400">Worker Clock</span> remains silky smooth (60fps).
                   </li>
                   <li>
-                    <strong className="text-blue-300">Tab Throttling:</strong> Switch tabs for 5 minutes. Return. Both should eventually match, but the Main Thread clock might visually "catch up" rapidly, while the Worker clock was never behind.
+                    <strong className="text-blue-300">Atomic Adjustments:</strong> Try clicking <span className="text-white border border-slate-600 px-1 rounded text-[10px]">+1M</span> while blocking the thread. The worker will register the click instantly, while the main thread clock might delay the update until the block clears.
                   </li>
                 </ul>
               </div>

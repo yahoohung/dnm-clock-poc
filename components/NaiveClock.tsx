@@ -4,14 +4,17 @@ export interface NaiveClockHandle {
     start: () => void;
     pause: () => void;
     setTime: (s: number) => void;
+    adjustTime: (delta: number) => void;
 }
 
 // Pure Helper
 const formatTime = (totalSeconds: number): string => {
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = Math.floor(totalSeconds % 60);
-  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  const absSeconds = Math.abs(totalSeconds);
+  const h = Math.floor(absSeconds / 3600);
+  const m = Math.floor((absSeconds % 3600) / 60);
+  const s = Math.floor(absSeconds % 60);
+  const prefix = totalSeconds < 0 ? '-' : '';
+  return `${prefix}${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 };
 
 export const NaiveClock = forwardRef<NaiveClockHandle, { className?: string }>(({ className }, ref) => {
@@ -44,6 +47,15 @@ export const NaiveClock = forwardRef<NaiveClockHandle, { className?: string }>((
                  state.current.startTime = Date.now();
              }
              setDisplayTime(formatTime(seconds));
+        },
+        adjustTime: (delta: number) => {
+            state.current.baseTime += delta * 1000;
+            // Force immediate update
+            const now = Date.now();
+            const diff = isRunning ? (now - state.current.startTime) : 0;
+            const totalMs = state.current.baseTime + diff;
+            const totalSec = Math.floor(totalMs / 1000);
+            setDisplayTime(formatTime(totalSec));
         }
     }));
 

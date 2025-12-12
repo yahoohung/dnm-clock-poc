@@ -56,10 +56,15 @@ function paint(displaySeconds) {
   
   // 4. Time String Composition (Zero GC)
   // [OPTIMIZATION] Use lookup table instead of real-time formatting
-  const h = DIGITS[Math.floor(displaySeconds / 3600) % 60]; 
-  const m = DIGITS[Math.floor((displaySeconds % 3600) / 60)];
-  const s = DIGITS[Math.floor(displaySeconds % 60)];
-  const timeText = \`\${h}:\${m}:\${s}\`;
+  // Handle negative time gracefully (optional, but good for robustness)
+  const absSeconds = Math.abs(displaySeconds);
+  const h = DIGITS[Math.floor(absSeconds / 3600) % 60]; 
+  const m = DIGITS[Math.floor((absSeconds % 3600) / 60)];
+  const s = DIGITS[Math.floor(absSeconds % 60)];
+  
+  // Simple prefix for negative if needed, though usually match timers are positive
+  const prefix = displaySeconds < 0 ? '-' : '';
+  const timeText = \`\${prefix}\${h}:\${m}:\${s}\`;
 
   // 5. Draw Text
   ctx.fillStyle = config.textColor;
@@ -72,7 +77,7 @@ function paint(displaySeconds) {
   ctx.fillText(timeText, width / 2, height / 2);
   
   // 6. Alive Indicator (Red Dot)
-  if (config.showDot && displaySeconds % 2 === 0) {
+  if (config.showDot && absSeconds % 2 === 0) {
     ctx.beginPath();
     const dotRadius = fontSize / 12;
     const dotX = width - (dotRadius * 3);
@@ -165,6 +170,21 @@ self.onmessage = function(e) {
       }
       state.lastRenderedSecond = payload.seconds;
       paint(payload.seconds);
+      break;
+
+    case 'ADJUST_TIME':
+      // payload.deltaSeconds can be positive or negative
+      state.baseTimeMs += payload.deltaSeconds * 1000;
+      
+      // Calculate current total immediately for UI feedback
+      let currentTotalMs = state.baseTimeMs;
+      if (state.isRunning) {
+        currentTotalMs += (performance.now() - state.startTimeMs);
+      }
+      
+      const newSecond = Math.floor(currentTotalMs / 1000);
+      state.lastRenderedSecond = newSecond;
+      paint(newSecond);
       break;
   }
 };
